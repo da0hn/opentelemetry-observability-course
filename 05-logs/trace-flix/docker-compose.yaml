@@ -1,0 +1,15 @@
+services:
+  movie-service:
+    image: vinsguru/movie-service
+    build: ./movie-service
+    environment:
+      "actor-service.url": "http://actor-service:8080/api/actors/"
+      "review-service.url": "http://review-service:8080/api/reviews"
+    ports:
+      - "8080:8080"
+  actor-service:
+    image: vinsguru/actor-service
+    build: ./actor-service
+  review-service:
+    image: vinsguru/review-service
+    build: ./review-service

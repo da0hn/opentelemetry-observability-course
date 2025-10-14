@@ -1,0 +1,78 @@
+services:
+  movie-service:
+    image: vinsguru/movie-service
+    container_name: movie-service
+    volumes:
+      - ./docker-volume/otel:/otel
+    command: >
+      java
+      -javaagent:/otel/opentelemetry-javaagent.jar
+      -Dotel.javaagent.configuration-file=/otel/opentelemetry-config.properties
+      -Dotel.service.name=movie-service  
+      -jar /app/app.jar
+    depends_on:
+      - otel-collector
+    environment:
+      "actor-service.url": "http://actor-service:8080/api/actors/"
+      "review-service.url": "http://review-service:8080/api/reviews"
+    ports:
+      - "8080:8080"
+  actor-service:
+    image: vinsguru/actor-service
+    container_name: actor-service
+    volumes:
+      - ./docker-volume/otel:/otel
+    command: >
+      java
+      -javaagent:/otel/opentelemetry-javaagent.jar
+      -Dotel.javaagent.configuration-file=/otel/opentelemetry-config.properties
+      -Dotel.service.name=actor-service
+      -jar /app/app.jar
+    ports:
+      - "8081:8080"
+    depends_on:
+      - otel-collector
+  review-service:
+    image: vinsguru/review-service
+    container_name: review-service
+    volumes:
+      - ./docker-volume/otel:/otel
+    command: >
+      java
+      -javaagent:/otel/opentelemetry-javaagent.jar
+      -Dotel.javaagent.configuration-file=/otel/opentelemetry-config.properties 
+      -Dotel.service.name=review-service    
+      -jar /app/app.jar
+    ports:
+      - "8082:8080"
+    depends_on:
+      - otel-collector
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.133.0
+    container_name: otel-collector
+    command: ["--config=/etc/otel/collector-config.yml"]
+    volumes:
+      - ./docker-volume/collector-config.yaml:/etc/otel/collector-config.yml
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    container_name: prometheus
+    volumes:
+      - ./docker-volume/prometheus.yaml:/etc/prometheus/prometheus.yaml
+    command:
+      - --config.file=/etc/prometheus/prometheus.yaml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - otel-collector
+  grafana:
+    image: grafana/grafana:12.0
+    container_name: grafana
+    volumes:
+      - ./docker-volume/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus

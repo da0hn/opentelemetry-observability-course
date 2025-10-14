@@ -1,0 +1,36 @@
+# otel collector configuration example: https://opentelemetry.io/docs/collector/configuration/
+# tail sampling configuration: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/tailsamplingprocessor
+
+receivers:
+ otlp:
+   protocols:
+     grpc:
+       endpoint: ":4317"
+     http:
+       endpoint: ":4318"
+
+exporters:
+  otlp/tempo:
+    endpoint: "tempo:4317"
+    tls:
+      insecure: true
+
+processors:
+ tail_sampling:
+   # how long to wait for a trace to complete before making a sampling decision.
+   decision_wait: 10s
+   # max number of traces to keep in memory while waiting for completion.
+   num_traces: 100000
+   # sampling policies
+   policies:
+     - name: errors-policy
+       type: status_code
+       status_code:
+         status_codes: [ERROR]
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [tail_sampling]
+      exporters: [otlp/tempo]

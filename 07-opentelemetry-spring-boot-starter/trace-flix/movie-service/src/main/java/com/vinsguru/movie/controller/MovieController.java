@@ -1,0 +1,37 @@
+package com.vinsguru.movie.controller;
+
+import com.vinsguru.movie.config.MovieViewMetrics;
+import com.vinsguru.movie.dto.MovieDto;
+import com.vinsguru.movie.exception.MovieNotFoundException;
+import com.vinsguru.movie.service.MovieService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+public class MovieController {
+
+    private static final Logger log = LoggerFactory.getLogger(MovieController.class);
+
+    private final MovieService movieService;
+    private final MovieViewMetrics movieViewMetrics;
+
+    public MovieController(MovieService movieService, MovieViewMetrics movieViewMetrics) {
+        this.movieService = movieService;
+        this.movieViewMetrics = movieViewMetrics;
+    }
+
+    @GetMapping("/api/movies/{movieId}")
+    public ResponseEntity<MovieDto> getMovie(@PathVariable Integer movieId, @RequestHeader Map<String, String> headers) {
+        log.info("request received for movie id: {}, headers: {}", movieId, headers);
+        var responseEntity = this.movieService.getMovie(movieId)
+                                              .map(ResponseEntity::ok)
+                                              .orElseThrow(() -> new MovieNotFoundException(movieId));
+        this.movieViewMetrics.recordView(movieId);
+        return responseEntity;
+    }
+
+}

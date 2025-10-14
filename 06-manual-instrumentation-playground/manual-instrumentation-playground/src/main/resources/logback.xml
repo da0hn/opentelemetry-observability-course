@@ -1,0 +1,22 @@
+<configuration>
+
+    <turboFilter class="com.vinsguru.instrumentation.logs.TurboDebugFilter" />
+
+    <!-- Console Appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level [%15.15t] %cyan(%-30.30logger{30}) : %m [%X]%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- OpenTelemetry-Collector Appender -->
+    <appender name="OTLP" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
+        <captureMdcAttributes>*</captureMdcAttributes>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="OTLP"/>
+    </root>
+
+</configuration>

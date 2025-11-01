@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "17339672-dffddab6-2975-4796-b6c4-1dc3eca90d7b",
+		"name": "opentelemetry-observability-course",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/movies",
+			"item": [
+				{
+					"name": "{movie_id}",
+					"item": [
+						{
+							"name": "Success",
+							"id": "17339672-c5bfa7cf-b5b6-4d60-b2cc-d492d1b5961d",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/movies/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"movies",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delayed",
+							"id": "17339672-c0ba48b7-9320-4503-a8cb-1e80da05c0f1",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/movies/9",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"movies",
+										"9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Failure",
+							"id": "17339672-d9aa78a3-b5c7-47ba-8648-5af103aa1b75",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/movies/10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"movies",
+										"10"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"id": "17339672-fcc1cd20-64aa-4941-bd12-3166e2ddadf2"
+				}
+			],
+			"id": "17339672-a2ce3ce0-1432-4131-9a74-34893f587186"
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

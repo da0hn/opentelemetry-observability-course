@@ -67,14 +67,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/movies/10",
+									"raw": "{{baseUrl}}/api/movies/9",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
 										"movies",
-										"10"
+										"9"
 									]
 								}
 							},
